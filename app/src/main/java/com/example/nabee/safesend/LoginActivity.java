@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
-
+//HELLO WORLD SEGFAULT SQUAD IS HERE!
 /**
  * A login screen that offers login via email/password.
  */
