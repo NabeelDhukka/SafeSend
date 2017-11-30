@@ -38,6 +38,7 @@ public class AdminPage extends AppCompatActivity {
                 user.setText(genCreds());
                 TextView pass = (TextView) findViewById(R.id.textView5);
                 pass.setText(genCreds());
+                userReg(user, pass);
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -60,4 +61,12 @@ public class AdminPage extends AppCompatActivity {
         return saltStr;
     }
 
+    public void userReg(TextView name,TextView pass){
+        //int type = 0;
+        String userName = name.getText().toString();
+        String userPass = pass.getText().toString();
+        BackEndDBTasks backEndDBTasks = new BackEndDBTasks(this);
+        backEndDBTasks.execute(userName,userPass);
+        //finish();
+    }
 }
