@@ -181,6 +181,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             focusView = mUserView;
             cancel = true;
         }
+        else{
+            //user name is right length so check if in database
+            userLoggin(username, password);
+        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -205,6 +209,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return password.length() == 15;
     }
 
+    public void userLoggin(String username, String pass){
+        String purpose = "loggin";
+        BackEndDBTasks backEndDBTasks = new BackEndDBTasks(this);
+        backEndDBTasks.execute(purpose,username,pass);
+    }
     /**
      * Shows the progress UI and hides the login form.
      */
@@ -338,7 +347,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                finish();
+               // finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

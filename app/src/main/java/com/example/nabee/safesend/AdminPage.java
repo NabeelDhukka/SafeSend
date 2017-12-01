@@ -65,8 +65,9 @@ public class AdminPage extends AppCompatActivity {
         //int type = 0;
         String userName = name.getText().toString();
         String userPass = pass.getText().toString();
+        String purpose = "register";
         BackEndDBTasks backEndDBTasks = new BackEndDBTasks(this);
-        backEndDBTasks.execute(userName,userPass);
+        backEndDBTasks.execute(purpose,userName,userPass);
         //finish();
     }
 }
