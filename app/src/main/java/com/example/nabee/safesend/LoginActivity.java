@@ -3,6 +3,9 @@ package com.example.nabee.safesend;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -19,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,16 +32,32 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static android.content.ContentValues.TAG;
 //HELLO WORLD SEGFAULT SQUAD IS HERE!
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+
+public class LoginActivity extends AppCompatActivity implements BackEndDBTasksInterface,LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -54,6 +74,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
+
     private UserLoginTask mAuthTask = null;
 
     // UI references.
@@ -66,6 +87,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         // Set up the login form.
         mUserView = (AutoCompleteTextView) findViewById(R.id.user);
         populateAutoComplete();
@@ -184,6 +206,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         else{
             //user name is right length so check if in database
             userLoggin(username, password);
+
         }
 
         if (cancel) {
@@ -212,8 +235,29 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void userLoggin(String username, String pass){
         String purpose = "loggin";
         BackEndDBTasks backEndDBTasks = new BackEndDBTasks(this);
+        backEndDBTasks.delegate = this;
         backEndDBTasks.execute(purpose,username,pass);
+//        String pls = backEndDBTasks.doInBackground(purpose,username,pass);
+  //      Log.d(TAG, pls);
     }
+
+    @Override
+    public void proccessFinish(String output) {
+        Log.d(TAG, output);
+        int len = output.length();
+        if(output.contains("Login Success") && output.charAt(len-1)=='1'){
+            Log.d(TAG, "FOUND ADMIN");
+            Intent intent = new Intent(this, AdminPage.class);
+            startActivity(intent);
+        }
+        else if(output.contains("Login Success") && output.charAt(len-1)=='0'){
+            Log.d(TAG, "FOUND USER");
+            Intent intent = new Intent(this, UserPage.class);
+            startActivity(intent);
+        }
+
+    }
+
     /**
      * Shows the progress UI and hides the login form.
      */
@@ -307,7 +351,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
-     */
+    */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
@@ -320,6 +364,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
+
+
             // TODO: attempt authentication against a network service.
 
             try {
@@ -360,5 +406,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
+
 }
 
