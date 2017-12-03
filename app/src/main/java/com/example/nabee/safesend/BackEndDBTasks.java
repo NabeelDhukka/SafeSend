@@ -140,8 +140,10 @@ public class BackEndDBTasks extends AsyncTask<String,Void , String>{
                 return response;
             }
             catch (MalformedURLException e) {
+                Log.d(TAG, "IN LOGGIN CATCH 1");
                 e.printStackTrace();
             } catch (IOException e) {
+                Log.d(TAG, "IN LOGGIN CATCH 2");
                 e.printStackTrace();
             }
 
