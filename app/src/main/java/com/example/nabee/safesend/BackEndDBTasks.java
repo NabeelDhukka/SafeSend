@@ -66,9 +66,9 @@ public class BackEndDBTasks extends AsyncTask<String,Void , String>{
     @Override
     protected String doInBackground(String... params) {
 
-        String reg_url = "http://10.0.2.2/safesendaccounts/register.php";
+        String reg_url = "http://172.24.64.184/safesendaccounts/register.php";
         String purpose = params[0];
-        String login_url =  "http://10.0.2.2/safesendaccounts/login.php";
+        String login_url =  "http://172.24.64.184/safesendaccounts/login.php";
         //String reg_url =  "http://10.0.2.2/safesendaccounts/register.php";
         //int type = 0;
         if(purpose.equals("register")){
